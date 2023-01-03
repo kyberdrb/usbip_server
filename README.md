@@ -176,7 +176,8 @@ Share USB devices through the network.
 
                 */15 * * * * systemctl restart usbip-printer.service
 
-            **TEST CASE:** The user of computer `CLIENT 1` (Windows) forgot to detach the printer after using it. The user of computer `CLIENT 2` (Linux) wants to use the printer.
+            **TEST CASE:**  
+            The user of computer `CLIENT 1` (Windows) forgot to detach the printer after using it. The user of computer `CLIENT 2` (Linux) wants to use the printer.
 
             In that case
             - either the first user tells the second user to manually detach the printer, which makes it shareable again and visible and available for attaching for the first user
@@ -185,96 +186,97 @@ Share USB devices through the network.
 
             In either case, in the meantime, the users can add tasks to the printing queue while the printer is still offline, i.e. disconnected or detached or locally unavailable.
 
+            SERVER - restarting the service for sharing the printer/device to make the shared device available for all clients when one of the clients attached the device and forgot to detach the device.
+
+                date && sudo systemctl status usbip-printer.service
+
+            ![](img/restore_visibility/01-Screenshot_2023-01-02_16-05-25-server-before_next_rebind.png)
+
+            CLIENT 1
+
+                date && usbip port
+                
+                date && usbip list --remote=192.168.31.204
+
+                date && usbip attach --busid=1-1.3 --remote=192.168.31.204
+
+            ![](img/restore_visibility/02-Screenshot_2023-01-02_16-02-01-client_1-attached_before_next_rebind.png)
+
+            CLIENT 2
+
+                date && sudo usbip port
+                
+                date && sudo usbip list --remote=192.168.31.204
+
+            ![](img/restore_visibility/03-Screenshot_2023-01-02_16-08-07-client_2-shared_device_is_already_reserved_and_attached_to_client_1.png)
+
             SERVER
+
+            Restart the usbip printer sharing service
 
                 sudo systemctl status usbip-printer.service
 
-                ● usbip-printer.service - Share printer and scanner via USB/IP by binding them to server
-                    Loaded: loaded (/etc/systemd/system/usbip-printer.service; enabled; vendor preset: enabled)
-                    Active: active (exited) since Fri 2022-12-30 14:40:01 CET; 3min 44s ago
-                    Process: 27119 ExecStartPre=/usr/sbin/usbip unbind --busid=1-1.3 (code=exited, status=1/FAILURE)
-                    Process: 27121 ExecStart=/usr/sbin/usbip bind --busid=1-1.3 (code=exited, status=0/SUCCESS)
-                Main PID: 27121 (code=exited, status=0/SUCCESS)
-                        CPU: 20ms
+                sudo systemctl restart usbip-printer.service
 
-                Dec 30 14:40:01 raspberrypi systemd[1]: usbip-printer.service: Succeeded.
-                Dec 30 14:40:01 raspberrypi systemd[1]: Stopped Share printer and scanner via USB/IP by binding them to server.
-                Dec 30 14:40:01 raspberrypi systemd[1]: Starting Share printer and scanner via USB/IP by binding them to server...
-                Dec 30 14:40:01 raspberrypi usbip[27119]: usbip: error: device is not bound to usbip-host driver
-                Dec 30 14:40:01 raspberrypi usbip[27121]: usbip: info: bind device on busid 1-1.3: complete
-                Dec 30 14:40:01 raspberrypi systemd[1]: Finished Share printer and scanner via USB/IP by binding them to server.
+            ![](img/restore_visibility/04-Screenshot_2023-01-02_16-13-48-server-after_rebind.png)
+
+            After the automatic/manual restart of the service, i.e `bind`ing and `unbind`ing the device with the `usbip` utility, the printer is again visible on the network for other clients, i.e the printer is exported, thus is sharable from the USB/IP server attachable for all USB/IP clients.
 
             CLIENT 1
 
                 usbip port
 
-                    TODO add image/terminal listing
-
                 usbip list --remote=192.168.31.204
 
-                usbip: info: no exportable devices found on 192.168.31.204
-
-                    TODO add image/terminal listing
+            ![](img/restore_visibility/05-Screenshot_2023-01-02_16-17-42-client_1-disconnection_of_device_after_restarting_sharing_on_server.png)
 
             CLIENT 2
 
-                $ usbip list --remote=192.168.31.204
+                date && sudo usbip list --remote=192.168.31.204
 
-                usbip: info: no exportable devices found on 192.168.31.204
+            ![](img/restore_visibility/06-Screenshot_2023-01-02_16-19-14-client_2-restored_visibility_of_shared_device_after_restarting_on_server.png)
 
-                    TODO add image/terminal listing
+            Let's now attach the shared device/printer to the CLIENT 2
 
-                $ usbip port
+                date && sudo usbip port
+                
+                date && sudo usbip list --remote=192.168.31.204
 
-                    TODO add image/terminal listing
+                date && sudo usbip attach --busid=1-1.3 --remote=192.168.31.204
 
-            After automatic restart of the service, the printer is again visible on the network for other clients, i.e the printer is exported, thus is sharable from the USB/IP server attachable for all USB/IP clients.
+            ![](img/restore_visibility/07-Screenshot_2023-01-02_16-26-34-client_2-attached_after_rebind.png)
 
-            SERVER
+            CLIENT 1 - the shared pinrter/device is now invisible for the CLIENT 1
+
+                date && sudo usbip port
+                
+                date && sudo usbip list --remote=192.168.31.204
+
+            ![](img/restore_visibility/08-Screenshot_2023-01-02_16-27-41-client_1-invisible_shared_device-client_1_attached_the_device_and_reserved_it.png)
+
+            SERVER - restarting the sharing service to restore visibility for all clients when somebody forgots to detach the shared device
 
                 sudo systemctl status usbip-printer.service
 
-                ● usbip-printer.service - Share printer and scanner via USB/IP by binding them to server
-                    Loaded: loaded (/etc/systemd/system/usbip-printer.service; enabled; vendor preset: enabled)
-                    Active: active (exited) since Fri 2022-12-30 14:45:01 CET; 2min 51s ago
-                    Process: 27177 ExecStartPre=/usr/sbin/usbip unbind --busid=1-1.3 (code=exited, status=1/FAILURE)
-                    Process: 27180 ExecStart=/usr/sbin/usbip bind --busid=1-1.3 (code=exited, status=0/SUCCESS)
-                Main PID: 27180 (code=exited, status=0/SUCCESS)
-                        CPU: 20ms
+                sudo systemctl restart usbip-printer.service
 
-                Dec 30 14:45:01 raspberrypi systemd[1]: Starting Share printer and scanner via USB/IP by binding them to server...
-                Dec 30 14:45:01 raspberrypi usbip[27177]: usbip: error: device is not bound to usbip-host driver
-                Dec 30 14:45:01 raspberrypi usbip[27180]: usbip: info: bind device on busid 1-1.3: complete
-                Dec 30 14:45:01 raspberrypi systemd[1]: Finished Share printer and scanner via USB/IP by binding them to server.
+            ![](img/restore_visibility/09-Screenshot_2023-01-02_16-36-00-server-after_yet_another_visibility_restart_for_the_device-periodic_restart.png)
 
-                    TODO add image/terminal listing
+            CLIENT 1 - attached shared device had been detached and visibility of the shared device had been restored
 
-            CLIENT 1
+                date && sudo usbip port
+                
+                date && sudo usbip list --remote=192.168.31.204
 
-                usbip list --remote=192.168.31.204
+            ![](img/restore_visibility/10-Screenshot_2023-01-02_16-31-25-client_1-after_yet_another_visibility_restart_for_the_device_is_visible_again-periodic_restart.png)
 
-                Exportable USB devices
-                ======================
-                - 192.168.31.204
-                    1-1.3: Seiko Epson Corp. : unknown product (04b8:114a)
-                        : /sys/devices/platform/soc/3f980000.usb/usb1/1-1/1-1.3
-                        : (Defined at Interface level) (00/00/00)
+            CLIENT 2 - invisible shared device is visible again
 
-                    TODO add image/terminal listing
+                date && sudo usbip port
+                
+                date && sudo usbip list --remote=192.168.31.204
 
-            CLIENT 2
-
-                $ date && usbip list --remote=192.168.31.204
-
-                Fri Dec 30 02:48:37 PM CET 2022
-                Exportable USB devices
-                ======================
-                - 192.168.31.204
-                    1-1.3: Seiko Epson Corp. : unknown product (04b8:114a)
-                        : /sys/devices/platform/soc/3f980000.usb/usb1/1-1/1-1.3
-                        : (Defined at Interface level) (00/00/00)
-
-                    TODO add image/terminal listing
+            ![](img/restore_visibility/11-Screenshot_2023-01-02_16-34-03-client_2-after_yet_another_visibility_restart_for_the_device_on_server_is_detached_again-periodic_restart.png)
 
             - Sources:
                 - https://duckduckgo.com/?q=linux+execute+command+periodically&ia=web
