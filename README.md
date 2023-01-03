@@ -23,6 +23,11 @@ Share USB devices through the network.
     - only one user at a time can use an already exported/bound and connected/attached device.
 
 1. **Server** - Installation
+
+    1. Clone this repository to the server, e.g. to the home directory of current user
+
+            git clone https://github.com/kyberdrb/usbip_server
+
     - **Linux**
         - **Arch Linux**
 
@@ -416,6 +421,11 @@ Share USB devices through the network.
         - TODO - not tested yet
 
 1. **Client** - Installation
+
+    1. Clone this repository to the client, e.g. to the home directory of current user
+
+            git clone https://github.com/kyberdrb/usbip_server
+
     - **Linux**
         - **Arch Linux**
 
@@ -426,12 +436,11 @@ Share USB devices through the network.
                 sudo aptitude install linux-tools-generic
 
     - **Windows**
-        1. Download the latest usbip package archive. At the time of writing, the latest version is `0.3.6`
+        1. Download the latest usbip package archive from the [Release](https://github.com/cezanne/usbip-win/releases) page of the project. At the time of writing, the latest version is `0.3.6`
             - https://github.com/cezanne/usbip-win/releases/download/v0.3.6-dev/usbip-win-0.3.6-dev.zip
 
-            Check the latest release at https://github.com/cezanne/usbip-win/releases
         1. Extract the downloaded archive.
-        1. Move the extracted directory to `C:\Programme\`
+        1. Move the extracted directory to `C:\Programy\`
         1. Double click on `usbip_test.pfx`, which will open the guide to install the certificate.
             1. Store location: `Local Machine`. Next.
             1. If prompted with UAC, click Yes to continue.
@@ -451,7 +460,7 @@ Share USB devices through the network.
 
         1. Install USBIP driver. Open PowerShell as Administrator:
 
-                cd C:\Programme\usbip-win-0.3.6-dev
+                cd C:\Programy\usbip-win-0.3.6-dev
 
                 .\usbip.exe install
 
@@ -487,7 +496,7 @@ Share USB devices through the network.
             1. On tab `Advanced`/`Spresnenie` click on `Environment Variables...`. A dialog window will open.
             1. In the section `System variables` in the column `Variable` find an entry called `Path`. Double click on the line. Another dialog window will open.
             1. Click on `New`
-            1. Enter the value `C:\Programme\usbip-win-0.3.6-dev`
+            1. Enter the value `C:\Programy\usbip-win-0.3.6-dev`
 
                 and press `Enter`
 
@@ -563,6 +572,14 @@ Share USB devices through the network.
             - Sources:
                 - https://github.com/kyberdrb/Windows_tutorials/blob/master/start_program_with_as_admin_i_e_with_elevated_priviledges_without_UAC_prompt/start_program_with_elevated_priviledges_without_UAC_prompt-OpenHardwareMonitor_example.md
                 - https://www.gnu.org/software/bash/manual/bash.html#Invoking-Bash
+
+            - **[OPTIONAL]** Modify the shortcut for device attachment:
+
+                ![](img/icons/1-Screenshot_2023-01-02_15-54-01-attach_printer.png)
+
+                ![](img/icons/2-Screenshot_2023-01-02_15-55-32-attach_printer-change_icon.png)
+
+                ![](img/icons/3-Screenshot_2023-01-02_15-57-19-attach_printer-icon_selection.png)
 
         - Attaching with commands:
 
@@ -702,6 +719,14 @@ Share USB devices through the network.
                     schtasks /run /tn "Detach printer - skip UAC prompt"
 
             1. Double click the shortcut to detach the printer.
+
+            - **[OPTIONAL]** Modify the shortcut for device detachment:
+
+                ![](img/icons/4-Screenshot_2023-01-02_15-54-44-detach_printer.png)
+
+                ![](img/icons/5-Screenshot_2023-01-02_15-58-08-detach_printer-change_icon.png)
+
+                ![](img/icons/6-Screenshot_2023-01-02_15-58-49-detach_printer-icon_selection.png)
 
         - Detaching with commands:
             1. Open PowerShell as Administrator to find out which port the USB/IP driver inserted the device into:
