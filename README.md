@@ -66,7 +66,7 @@ Share USB devices through the network.
             - https://wiki.archlinux.org/title/Kernel_module#systemd
 
     1. Make the USB/IP server process start on boot (together with binding a particular device if desired) to reduce the accessing to the server each time we want to share and attach device to minimum - the server does the binding automatically at startup for us
-        1. Create the base `usbipd.service` for starting and stopping USB/IP server
+        1. Create the base `usbipd.service` (see [example](usbip_resources/server/usbipd.service)) for starting and stopping USB/IP server
 
                 $ sudo vim /etc/systemd/system/usbipd.service
 
@@ -87,7 +87,7 @@ Share USB devices through the network.
 
             The option `RemainAfterExit=yes` assures, that the `systemd` executes only the `ExecStart` command (and `ExecStartPre` and `ExecStartPost` options). When we ommit the `RemainAfterExit` option or set it to `RemainAfterExit=no` then the systemd would execute the `ExecStart` commands and then jump immediatly to execution of `ExecStop` commands.
 
-        1. Create the service for enabling and disabling device sharing, e.g. printer, via USB/IP server (the shared device is physically connected to the printer via USB port)
+        1. Create the service `usbip-printer.service` (see [example](usbip_resources/server/usbip-printer.service)) for enabling and disabling device sharing, e.g. printer, via USB/IP server (the shared device is physically connected to the printer via USB port)
 
                 $ sudo vim /etc/systemd/system/usbip-printer.service
 

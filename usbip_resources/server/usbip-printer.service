@@ -1,0 +1,17 @@
+[Unit]
+Description=Share printer and scanner via USB/IP by binding them to server
+After=network.target usbipd.service
+Requires=usbipd.service
+
+[Service]
+Type=oneshot
+ExecStartPre=-/usr/sbin/usbip unbind --busid=1-1.3
+ExecStart=/usr/sbin/usbip bind --busid=1-1.3
+RemainAfterExit=yes
+ExecStop=/usr/sbin/usbip unbind --busid=1-1.3
+Restart=on-failure
+ExecReload=/bin/sh -c "/usr/sbin/usbip unbind --busid=1-1.3; /usr/sbin/usbip bind --busid=1-1.3"
+
+[Install]
+WantedBy=multi-user.target
+
