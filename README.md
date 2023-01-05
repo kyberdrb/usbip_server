@@ -578,7 +578,7 @@ Share USB devices through the network.
                 or with a one-line-command:
 
                 ```
-                ./c/Programy/usbip_server/scripts/client/attach_printer.sh
+                /c/Programy/usbip_server/scripts/client/attach_printer.sh
                 ```
 
             1. For more convenient launching, continue along with following steps to create a shortcut that launches the attaching script without the UAC script, which is invoked by any program lauched as Administrator, i.e. with elevated priviledges.
