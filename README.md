@@ -790,3 +790,8 @@ Share USB devices through the network.
     - Disable sharing for a particular USB device
 
             sudo usbip unbind --busid=1-1.5
+
+## Further development
+
+- server: making binding and unbinding services generic
+- client: making attaching and detaching scripts generic
