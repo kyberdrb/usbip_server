@@ -24,7 +24,15 @@ Share USB devices through the network.
 
 1. **Server** - Installation
 
-    1. Clone this repository to the server, e.g. to the home directory of current user
+    1. Clone this repository to the server, e.g. to the home directory of current user.
+
+        Open `Git Bash` and enter following commands
+
+            cd
+
+            mkdir git
+
+            cd git
 
             git clone https://github.com/kyberdrb/usbip_server
 
@@ -52,11 +60,11 @@ Share USB devices through the network.
 
     1. Load the module at system startup
 
-        **Debian/Ubuntu/Raspberry Pi OS** - see [example for Debian-based server](usbip_resources/server/Debian-Ubuntu-Raspberry_Pi_OS/etc/modules)
+        **Debian/Ubuntu/Raspberry Pi OS** - see [example for Debian-based server](configs/server/Debian-Ubuntu-Raspberry_Pi_OS/etc/modules)
 
             echo 'usbip_host' | sudo tee --append /etc/modules
 
-        **Arch Linux** - see [example for Arch Linux server](usbip_resources/server/Arch_Linux/etc/modules-load.d/usbip.conf)
+        **Arch Linux** - see [example for Arch Linux server](configs/server/Arch_Linux/etc/modules-load.d/usbip.conf)
 
             echo 'usbip_host' | sudo tee --append /etc/modules-load.d/usbip.conf
 
@@ -71,7 +79,7 @@ Share USB devices through the network.
             - https://wiki.archlinux.org/title/Kernel_module#systemd
 
     1. Make the USB/IP server process start on boot (together with binding a particular device if desired) to reduce the accessing to the server each time we want to share and attach device to minimum - the server does the binding automatically at startup for us
-        1. Create the base `usbipd.service` (see [example](usbip_resources/server/usbipd.service)) for starting and stopping USB/IP server
+        1. Create the base `usbipd.service` (see [example](scripts/server/usbipd.service)) for starting and stopping USB/IP server
 
                 $ sudo vim /etc/systemd/system/usbipd.service
 
@@ -92,7 +100,7 @@ Share USB devices through the network.
 
             The option `RemainAfterExit=yes` assures, that the `systemd` executes only the `ExecStart` command (and `ExecStartPre` and `ExecStartPost` options). When we ommit the `RemainAfterExit` option or set it to `RemainAfterExit=no` then the systemd would execute the `ExecStart` commands and then jump immediatly to execution of `ExecStop` commands.
 
-        1. Create the service `usbip-printer.service` (see [example](usbip_resources/server/usbip-printer.service)) for enabling and disabling device sharing, e.g. printer, via USB/IP server (the shared device is physically connected to the printer via USB port)
+        1. Create the service `usbip-printer.service` (see [example](scripts/server/usbip-printer.service)) for enabling and disabling device sharing, e.g. printer, via USB/IP server (the shared device is physically connected to the printer via USB port)
 
                 $ sudo vim /etc/systemd/system/usbip-printer.service
 
@@ -246,7 +254,7 @@ Share USB devices through the network.
 
             ![](img/restore_visibility/07-Screenshot_2023-01-02_16-26-34-client_2-attached_after_rebind.png)
 
-            CLIENT 1 - the shared pinrter/device is now invisible for the CLIENT 1
+            CLIENT 1 - the shared printer/device is now invisible for the CLIENT 1
 
                 date && sudo usbip port
                 
@@ -424,10 +432,6 @@ Share USB devices through the network.
 
 1. **Client** - Installation
 
-    1. Clone this repository to the client, e.g. to the home directory of current user
-
-            git clone https://github.com/kyberdrb/usbip_server
-
     - **Linux**
         - **Arch Linux**
 
@@ -484,11 +488,11 @@ Share USB devices through the network.
 
         1. Make the module load on startup
 
-            **Debian/Ubuntu/Raspberry Pi OS** - see [example for Debian-based client](usbip_resources/client/Debian-Ubuntu-Raspberry_Pi_OS/etc/modules)
+            **Debian/Ubuntu/Raspberry Pi OS** - see [example for Debian-based client](configs/client/Debian-Ubuntu-Raspberry_Pi_OS/etc/modules)
 
                 echo 'vhci-hcd' | sudo tee --append /etc/modules
 
-            **Arch Linux** - see [example for Arch Linux client](usbip_resources/client/Arch_Linux/etc/modules-load.d/usbip.conf)
+            **Arch Linux** - see [example for Arch Linux client](configs/client/Arch_Linux/etc/modules-load.d/usbip.conf)
 
                 echo 'vhci-hcd' | sudo tee --append /etc/modules-load.d/usbip.conf
 
@@ -504,12 +508,43 @@ Share USB devices through the network.
 
                 The entered path needs to be **without** the last backslash, otherwise the binaries will not be autocompleted.
             1. Confirm changes by clicking on the `OK` button in all dialog windows.
-            1. Sign out and back in, or reboot the computer alltogether, to reload changes.
+            1. Sign out and back in, or reboot the computer alltogether, to reload and apply changes.
 
 1. **Client** - Attaching the shared USB device exported from the USB/IP server. The device will be remotely connected to the computer, and act as if it was connected locally. **After attaching the device, it will be reserved exclusively for the computer that attached it, thus hidden for all other USB/IP clients.**
+
+    1. Clone this repository to the client, e.g. to the home directory of current user
+
+        - **Linux**
+
+            Open terminal and enter following commands
+
+                cd
+
+                mkdir Programy
+
+                cd Programy
+
+                git clone https://github.com/kyberdrb/usbip_server
+
+        - **Windows**
+
+            - In order to run Shell scripts `*.sh` on Windows a Linux Terminal is needed. This guide has been designed for `Git Bash` which is a part of `git` package available for download at https://git-scm.com/. Make sure to add directories `cmd`, `bin` from the git installation directory and the git installation directory itself to the `Path` system environment variable.
+
+            Open `Git Bash` and enter following commands
+
+                cd /c
+
+                mkdir Programy
+
+                cd Programy
+
+                git clone https://github.com/kyberdrb/usbip_server
+
+    Continue with the preparation of the script for attaching the device:
+
     - **Linux**
 
-        - Attaching with script: [`attach_printer.sh`](usbip_resources/client/attach_printer.sh)
+        - Attaching with script: [`attach_printer.sh`](scripts/client/attach_printer.sh)
 
             Post-process the script to make it executable:
 
@@ -527,28 +562,24 @@ Share USB devices through the network.
 
     - **Windows**
 
-        - In order to run Shell scripts `*.sh` on Windows a Linux Terminal is needed. This guide has been designed for `Git Bash` which is a part of `git` package available for download at https://git-scm.com/. Make sure to add directories `cmd`, `bin` from the git installation directory and the git installation directory itself to the `Path` system environment variable.
-
         - Attaching with script:
 
-            Assuming, that the script resides in directory `C:\Programy`
+            Assuming, that the repository resides in directory `C:\Programy`
 
             1. Reuse the Linux script for attaching device:
 
                 To attach the printer, it's sufficient to start `Git Bash` as Administrator and run the attaching script mentioned in the **Linux** section above as follows:
 
                 ```
-                cd /c/Programy/
+                cd /c/Programy/usbip_server/scripts/client/
                 ./attach_printer.sh
                 ```
 
                 or with a one-line-command:
 
                 ```
-                /c/Programy/attach_printer.sh
+                ./c/Programy/usbip_server/scripts/client/attach_printer.sh
                 ```
-
-                ---
 
             1. For more convenient launching, continue along with following steps to create a shortcut that launches the attaching script without the UAC script, which is invoked by any program lauched as Administrator, i.e. with elevated priviledges.
 
@@ -561,7 +592,7 @@ Share USB devices through the network.
                 - tab `Actions`
 
                     _Program:_ `git-bash.exe`
-                    _Arguments:_ `-c "/c/Programy/attach_printer.sh"`
+                    _Arguments:_ `-c "/c/Programy/usbip_server/scripts/client/attach_printer.sh"`
 
                 - tab `Conditions` - uncheck all
 
@@ -641,7 +672,7 @@ Share USB devices through the network.
 
     - **Linux**
 
-        - Detaching with script: [`detach_printer.sh`](usbip_resources/client/detach_printer.sh)
+        - Detaching with script: [`detach_printer.sh`](scripts/client/detach_printer.sh)
 
             Post-process the script to make it executable:
 
@@ -678,28 +709,23 @@ Share USB devices through the network.
 
     - **Windows**
 
-        - In order to run Shell scripts `*.sh` on Windows a Linux Terminal is needed. This guide has been designed for `Git Bash` which is a part of `git` package available for download at https://git-scm.com/. Make sure to add directories `cmd`, `bin` from the git installation directory and the git installation directory itself to the `Path` system environment variable.
-
         - Detaching with script:
-
-            Assuming, that the script resides in directory `C:\Programy`
 
             1. Reuse the Linux script for detaching device:
 
                 To detach the printer, it's sufficient to start `Git Bash` as Administrator and run the detaching script mentioned in the **Linux** section above as follows:
 
                 ```
-                cd /c/Programy/
+                cd /c/Programy/usbip_server/scripts/client
+
                 ./detach_printer.sh
                 ```
 
                 or with a one-line-command:
 
                 ```
-                /c/Programy/detach_printer.sh
+                /c/Programy/usbip_server/scripts/client/detach_printer.sh
                 ```
-
-                ---
 
             1. For more convenient launching, continue along with following steps to create a shortcut that launches the detaching script without the UAC script, which is invoked by any program lauched as Administrator, i.e. with elevated priviledges.
 
@@ -712,7 +738,7 @@ Share USB devices through the network.
                 - tab `Actions`
 
                     _Program:_ `git-bash.exe`
-                    _Arguments:_ `-c "/c/Programy/detach_printer.sh"`
+                    _Arguments:_ `-c "/c/Programy/usbip_server/scripts/client/detach_printer.sh"`
 
                 - tab `Conditions` - uncheck all
 
