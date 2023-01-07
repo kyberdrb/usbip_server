@@ -795,3 +795,23 @@ Share USB devices through the network.
 
 - server: making binding and unbinding services generic
 - client: making attaching and detaching scripts generic
+- add `git pull` this repo at the beginning of `attach_printer.sh` for updating
+- add unused scripts for bind/unbind of all connected devices on Raspberry
+
+        disable_sharing_of_all_usbip_devices.sh
+        ...
+
+        #!/bin/sh
+
+        usbip list --local | grep busid | tail --lines=+2 | cut --delimiter=' ' --fields=4 | xargs -I {} sudo usbip unbind --busid="{}"
+
+    ---
+
+        share_of_all_usbip_devices.sh
+        ...
+
+        #!/bin/sh
+
+        usbip list --local | grep busid | tail --lines=+2 | cut --delimiter=' ' --fields=4 | xargs -I {} sudo usbip bind --busid="{}"
+
+- bind device automatically after connecting to the Raspberry
