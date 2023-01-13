@@ -464,7 +464,7 @@ Share USB devices through the network.
 
             Reboot the PC to apply changes
 
-        1. Install USBIP driver. Open PowerShell as Administrator:
+        1. **Install USBIP driver. Open PowerShell as Administrator:**
 
                 cd C:\Programy\usbip-win-0.3.6-dev
 
@@ -508,7 +508,8 @@ Share USB devices through the network.
 
                 The entered path needs to be **without** the last backslash, otherwise the binaries will not be autocompleted.
             1. Confirm changes by clicking on the `OK` button in all dialog windows.
-            1. Sign out and back in, or reboot the computer alltogether, to reload and apply changes.
+            1. Open PowerShell as a regular user. Enter first characters of the program, e.g. `usb` and then press `Tab` key repeatedly until the the name of the application is displayed `.\usbip.exe`  
+                 If not, sign out and back in, or reboot the computer alltogether, to reload and apply changes.
 
 1. **Client** - Attaching the shared USB device exported from the USB/IP server. The device will be remotely connected to the computer, and act as if it was connected locally. **After attaching the device, it will be reserved exclusively for the computer that attached it, thus hidden for all other USB/IP clients.**
 
@@ -530,11 +531,27 @@ Share USB devices through the network.
 
             - In order to run Shell scripts `*.sh` on Windows a Linux Terminal is needed. This guide has been designed for `Git Bash` which is a part of `git` package available for download at https://git-scm.com/. Make sure to add directories `cmd`, `bin` from the git installation directory and the git installation directory itself to the `Path` system environment variable.
 
+            Git needs a text editor when an exceptional situation occurs, and user interaction is needed. My personal preference is to use VSCodium which can be downloaded at https://github.com/VSCodium/vscodium/releases. Find the latest version, click on `Show all N assets` and find the preferred instaler for Windows which is named `VSCodiumSetup-x64-A.BB.C.DDDDD`. Download the installer together with the checksum files `sha1` and `sha256` for verification. The verification of the installer file assures its integrity and trustworthiness: open PowerShell as a regular user and enter following commands:
+
+                cd "${HOME}/Downloads"
+
+                Get-FileHash -Algorithm SHA1 "VSCodiumSetup-x64-A.BB.C.DDDDD.exe"
+
+                type VSCodiumSetup-x64-A.BB.C.DDDDD.exe.sha1
+
+                Get-FileHash -Algorithm SHA256 "VSCodiumSetup-x64-A.BB.C.DDDDD.exe"
+
+                type VSCodiumSetup-x64-A.BB.C.DDDDD.exe.sha256
+
+            TODO add screenshot of the `Path` environment variable paths list
+
             Open `Git Bash` and enter following commands
 
                 cd /c
 
                 mkdir Programy
+
+            If you get an error message `mkdir: cannot create directory 'Programy': file exists`, then the directory is already present on the filesystem. Just continue along, everything is fine ;)
 
                 cd Programy
 
@@ -581,6 +598,15 @@ Share USB devices through the network.
                 /c/Programy/usbip_server/scripts/client/attach_printer.sh
                 ```
 
+                TODO If you get an error  
+                `usbip: error: failed to open vhci driver` for `usbip port` command  
+                or  
+                `usbip: error: vhci driver is not loaded` for `usbip attach` command in the terminal window after launching the script, install the USBIP driver. Maybe you've forgotten in the heat of the deployment. Open the PowerShell window as Administrator and execute command
+
+                    usbip install
+
+                Then restart the computer.
+
             1. For more convenient launching, continue along with following steps to create a shortcut that launches the attaching script without the UAC script, which is invoked by any program lauched as Administrator, i.e. with elevated priviledges.
 
                 Create a scheduled task: right click on Windows start menu -> Computer Management -> In the left pane click on `Task Scheduler` -> `Task Scheduler Library`
@@ -591,7 +617,7 @@ Share USB devices through the network.
                     - check **Run with highest priviledges** - checking this option will bypass/skip the UAC prompt and executes the commands in `Action` tab as Administrator directly
                 - tab `Actions`
 
-                    _Program:_ `git-bash.exe`
+                    _Program:_ `git-bash.exe`  
                     _Arguments:_ `-c "/c/Programy/usbip_server/scripts/client/attach_printer.sh"`
 
                 - tab `Conditions` - uncheck all
@@ -814,3 +840,10 @@ Share USB devices through the network.
         usbip list --local | grep busid | tail --lines=+2 | cut --delimiter=' ' --fields=4 | xargs -I {} sudo usbip bind --busid="{}"
 
 - bind device automatically after connecting to the Raspberry
+
+- git-scm
+- vscodium release page
+- usbip: error: failed to open vhci driver
+- unix.stackexchange usbip error open vhci driver
+- sourceforge usb/ip server is raspberry client is Windows10
+
