@@ -529,7 +529,8 @@ Share USB devices through the network.
 
         - **Windows**
 
-            - In order to run Shell scripts `*.sh` on Windows a Linux Terminal is needed. This guide has been designed for `Git Bash` which is a part of `git` package available for download at https://git-scm.com/. Make sure to add directories `cmd`, `bin` from the git installation directory and the git installation directory itself to the `Path` system environment variable.
+            - In order to run Shell scripts `*.sh` on Windows a Linux Terminal is needed. This guide has been designed for `Git Bash` which is a part of `git` package available for download at https://git-scm.com/.  
+                **Make sure to add directories `cmd`, `bin` from the git installation directory and the git installation directory itself to the `Path` system environment variable.**
 
             Git needs a text editor when an exceptional situation occurs, and user interaction is needed. My personal preference is to use VSCodium which can be downloaded at https://github.com/VSCodium/vscodium/releases. Find the latest version, click on `Show all N assets` and find the preferred instaler for Windows which is named `VSCodiumSetup-x64-A.BB.C.DDDDD`. Download the installer together with the checksum files `sha1` and `sha256` for verification. The verification of the installer file assures its integrity and trustworthiness: open PowerShell as a regular user and enter following commands:
 
@@ -542,6 +543,8 @@ Share USB devices through the network.
                 Get-FileHash -Algorithm SHA256 "VSCodiumSetup-x64-A.BB.C.DDDDD.exe"
 
                 type VSCodiumSetup-x64-A.BB.C.DDDDD.exe.sha256
+
+            Then run the installer. **Make sure that the option `Add to PATH (requires shell restart)` is checked, in order for the Git installator to see the VSCodium binary for continuing in the installation procedure.**
 
             TODO add screenshot of the `Path` environment variable paths list
 
@@ -607,6 +610,12 @@ Share USB devices through the network.
 
                 Then restart the computer.
 
+                - Sources:
+                    - https://duckduckgo.com/?q=usbip%3A+error%3A+failed+to+open+vhci+driver&ia=web
+                    - https://unix.stackexchange.com/questions/470827/usbip-error-open-vhci-driver
+                    - https://sourceforge.net/p/usbip/discussion/418508/thread/2168c4ca/
+                    - https://sourceforge.net/p/usbip/discussion/418507/thread/3a8db1b2fc/
+
             1. For more convenient launching, continue along with following steps to create a shortcut that launches the attaching script without the UAC script, which is invoked by any program lauched as Administrator, i.e. with elevated priviledges.
 
                 Create a scheduled task: right click on Windows start menu -> Computer Management -> In the left pane click on `Task Scheduler` -> `Task Scheduler Library`
@@ -615,6 +624,9 @@ Share USB devices through the network.
                 - tab `General`
                     - Name: `Attach printer - skip UAC prompt`
                     - check **Run with highest priviledges** - checking this option will bypass/skip the UAC prompt and executes the commands in `Action` tab as Administrator directly
+
+                - tab `Triggers` - leave empty
+
                 - tab `Actions`
 
                     _Program:_ `git-bash.exe`  
@@ -683,16 +695,17 @@ Share USB devices through the network.
             - Epson M2140 support page: https://www.epson.sk/sk_SK/support/sc/epson-ecotank-m2140/s/s1672?selected-tab=&selected-os=Windows+10+64-bit
             - To make the printer fully working, download the driver `2.60.01` for `Epson M2140`
                 - https://download.epson-europe.com/pub/download/6317/epson631786eu.exe
-            - To make the scanner fully working, download and install the `EPSON Scan (v6.490)` utility for `Epson M2140` which contains the useful scanner driver, _but not so usefull utility to use the scanner_
+            - To make the scanner fully working, download and install the `EPSON Scan (v6.490)` utility for `Epson M2140` which contains the scanner driver together with the `Epson Scan 2 v6.5.23.29563` utility, _but not so usefull utility to use the scanner_
                 - https://download.epson-europe.com/pub/download/6309/epson630937eu.exe
-            - To actually scan a document
-                - use the `EPSON Scan 2 (v6.2.3.0)` utility together with the `EPSON Scan Updater (v1.0)` (bugfix), which can be found on the support page for printer `Epson L382` which makes a sharper and more detailed scan than the `Epson ScanSmart`. Don't use the `Epson Scan` utility from the support page for `Epson M2140` because it has inconsistent results (doesn't find the scanner or the app doesn't start at all)
-                    - EPSON Scan 2 (v6.2.3.0): https://download.epson-europe.com/pub/download/6361/epson636150eu.exe
-                    - EPSON Scan Updater (v1.0): https://download.epson-europe.com/pub/download/6306/epson630619eu.exe
-                - or use `Epson ScanSmart` from https://www.epson.sk/sk_SK/scansmart-document-scanning-software
-                    - https://download.epson-europe.com/pub/download/6390/epson639084eu.exe
-            - For updating, you need the `Epson Software updater (v4.6.5.0)` for `Epson M2140`
-                - https://download.epson-europe.com/pub/download/6489/epson648951eu.exe
+            - In case of problems...:
+                - ... with the scanning:
+                    - use the `EPSON Scan 2 (v6.2.3.0)` utility together with the `EPSON Scan Updater (v1.0)` (bugfix), which can be found on the support page for printer `Epson L382` which makes a sharper and more detailed scan than the `Epson ScanSmart`. Don't use the `Epson Scan` utility from the support page for `Epson M2140` because it has inconsistent results (doesn't find the scanner or the app doesn't start at all)
+                        - EPSON Scan 2 (v6.2.3.0): https://download.epson-europe.com/pub/download/6361/epson636150eu.exe
+                        - EPSON Scan Updater (v1.0): https://download.epson-europe.com/pub/download/6306/epson630619eu.exe
+                    - or use `Epson ScanSmart` from https://www.epson.sk/sk_SK/scansmart-document-scanning-software
+                        - https://download.epson-europe.com/pub/download/6390/epson639084eu.exe
+                - For updating the `Epson M2140` the program `Epson Software updater (v4.6.5.0)` can be used
+                    - https://download.epson-europe.com/pub/download/6489/epson648951eu.exe
 
 1. **Client** - Detaching the USB device to make the USB device available to other clients/computers/users. This command doesn't produce any messages on the server. **After detaching the device, it will be available for all USB/IP clients which will see it in the list of exportable devices.**
 
@@ -761,6 +774,9 @@ Share USB devices through the network.
                 - tab `General`
                     - Name: `Detach printer - skip UAC prompt`
                     - check **Run with highest priviledges** - checking this option will bypass/skip the UAC prompt and executes the commands in `Action` tab as Administrator directly
+
+                - tab `Triggers` - leave empty
+
                 - tab `Actions`
 
                     _Program:_ `git-bash.exe`
@@ -819,6 +835,9 @@ Share USB devices through the network.
 
 ## Further development
 
+- client-side-controlled binding i.e. violent binding - in the script `attach_printer.sh`
+    - https://hackaday.io/project/169775-usbip-ez/
+
 - server: making binding and unbinding services generic
 - client: making attaching and detaching scripts generic
 - add unused scripts for bind/unbind of all connected devices on Raspberry
@@ -840,10 +859,7 @@ Share USB devices through the network.
         usbip list --local | grep busid | tail --lines=+2 | cut --delimiter=' ' --fields=4 | xargs -I {} sudo usbip bind --busid="{}"
 
 - bind device automatically after connecting to the Raspberry
-
-- git-scm
-- vscodium release page
-- usbip: error: failed to open vhci driver
-- unix.stackexchange usbip error open vhci driver
-- sourceforge usb/ip server is raspberry client is Windows10
+- test Android integration
+    - https://play.google.com/store/apps/details?id=org.cgutman.usbipserverforandroid
+    - https://sourceforge.net/p/usbip/discussion/418508/thread/2168c4ca/
 
