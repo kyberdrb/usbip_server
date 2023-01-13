@@ -4,8 +4,9 @@ set -x
 
 SCRIPT_DIR="$(dirname "$(readlink --canonicalize "$0")")"
 
-# TODO invoke updating the script
-#  via 'git pull' of custom client scripts
+cd "${SCRIPT_DIR}"
+git reset --hard HEAD
+git pull
 
 # detach printer gracefully to prevent duplicate attachment of the same device to another port which makes the device unresponsive
 
