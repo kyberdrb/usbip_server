@@ -5,20 +5,14 @@ set -x
 SCRIPT_DIR="$(dirname "$(readlink --canonicalize "$0")")"
 
 # Reset any local changes to make the updating seamless
-cd "${SCRIPT_DIR}"
-git reset --hard HEAD
-# Try passing the script dir to 'git' to ommit the 'cd' command
-# git -C "${SCRIPT_DIR}" reset --hard HEAD
+git -C "${SCRIPT_DIR}" reset --hard HEAD
 
 # Sources:
 # - https://duckduckgo.com/?q=how+reset+changes+to+repo+git+head&ia=web
 # - https://devconnected.com/how-to-git-reset-to-head/
 
 # Update the project/repo
-git pull
-# Try passing the script dir to 'git' to ommit the 'cd' command
-git pull
-# git -C "${SCRIPT_DIR}" pull
+git -C "${SCRIPT_DIR}" pull
 
 # Source: 'man git-pull'
 
